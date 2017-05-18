@@ -14,3 +14,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group(['prefix'=>'api'],function (){
+    Route::group(['prefix'=>'v1'],function (){
+        Route::get('test/search/{params}/{quantity}',['as'=>'test.search','uses'=>'TestController@search']);
+    });
+});
