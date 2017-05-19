@@ -27,7 +27,7 @@
 @endsection
 @section('subContent')
     @if(isset($videos))
-        <div class="row cyan lighten-5">
+        <div class="row ">
             @foreach($videos as $video)
                 <div class="card  col s4">
                     <div class="card-image waves-effect waves-block waves-light">
