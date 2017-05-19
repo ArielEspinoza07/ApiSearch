@@ -21,6 +21,7 @@
 <p>Example:
 hash_hmac(sha256,'search,quantity',er4ew5r454)
 </p>
+<p>hash_hmac('sha256',$search.$quantity,env('EVP_PASS_KEY'));</p>
 
 
 <table>
