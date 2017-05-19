@@ -18,6 +18,8 @@ Route::get('/', function () {
 Route::group(['prefix'=>'api','middleware'=>'token.verifier'],function (){
     Route::group(['prefix'=>'v1'],function (){
         Route::post('song/search',  ['as'   =>  'test.search'   ,'uses'    =>  'SongController@search']);
-        Route::get('test/search/{params}/{quantity}',['as'=>'test.search','uses'=>'TestController@search']);
     });
 });
+
+Route::get('/videos',   ['as'   =>  'testIndex'    ,'uses'    =>  'TestController@index']);
+Route::post('/search',  ['as'   =>  'testSearch'   ,'uses'    =>  'TestController@search']);
