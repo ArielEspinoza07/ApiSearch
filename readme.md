@@ -42,5 +42,3 @@ hash_hmac(sha256,'search,quantity',er4ew5r454)
         </tr>
     </tbody>
 </table>
-
-<></>
