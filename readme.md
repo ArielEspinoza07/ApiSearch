@@ -22,7 +22,7 @@
 hash_hmac(sha256,'search,quantity',er4ew5r454)
 </p>
 <p>hash_hmac('sha256',$search.$quantity,env('EVP_PASS_KEY'));</p>
-
+<p>Send the result of the hash_hmac on the header request with the name authtoken</p>
 
 <table>
     <thead>
