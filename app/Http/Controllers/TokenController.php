@@ -16,7 +16,7 @@ class TokenController extends Controller
         $token  = $this->generateHash($request->except('_token'));
 
         $response   =   array(
-            'status'    =>  (string)'error',
+            'status'    =>  (string)'ok',
             'code'      =>  (int)HTTP_CODE::HTTP_OK,
             'message'   =>  (string)'The generation of token was successfully',
             'data'      =>  $token

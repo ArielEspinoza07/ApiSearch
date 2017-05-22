@@ -46,8 +46,8 @@ class SongController extends Controller
         $responseGoogle = $this->googleProxy->search($search,$param);
 
         $response   =   array(
-            'status'    =>  (string)'error',
-            'code'      =>  (int)HTTP_CODE::HTTP_BAD_REQUEST,
+            'status'    =>  (string)'ok',
+            'code'      =>  (int)HTTP_CODE::HTTP_OK,
             'message'   =>  (string)'The search was successfully',
             'data'      =>  $responseGoogle
         );

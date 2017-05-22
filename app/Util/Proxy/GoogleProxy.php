@@ -19,7 +19,7 @@ class GoogleProxy
     public function __construct(Google_Client $google_Client)
     {
         $this->googleClient =   $google_Client;
-        $google_Client->setDeveloperKey(env('GOOGLE_API_KEY'));
+        $this->googleClient->setDeveloperKey(env('GOOGLE_API_KEY'));
     }
 
     public function search($searchString,$optParams = array('q'=>'','maxResults'=>'10'))
