@@ -15,9 +15,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['prefix'=>'api','middleware'=>'token.verifier'],function (){
+Route::group(['prefix'=>'api'],function (){
     Route::group(['prefix'=>'v1'],function (){
-        Route::post('song/search',  ['as'   =>  'test.search'   ,'uses'    =>  'SongController@search']);
+        Route::group(['middleware'=>'token.verifier'],function (){
+            Route::post('song/search'       ,  ['as'   =>  'test.search'   ,'uses'    =>  'SongController@search']);
+        });
+        Route::post('generate/token'    ,  ['as'   =>  'test.search'   ,'uses'    =>  'TokenController@generateToken']);
     });
 });
 
