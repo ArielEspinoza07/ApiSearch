@@ -34,7 +34,15 @@ hash_hmac(sha256,'search,quantity',er4ew5r454)
     </thead>
     <tbody>
         <tr>
-            <td>api/v1song/search</td>
+            <td>api/v1/song/search</td>
+            <td>Post</td>
+            <td>
+                <p>search: <span>type= string</span></p>
+                <p>quantity: <span>int </span></p>
+            </td>
+        </tr>
+        <tr>
+            <td>api/v1/generate/token</td>
             <td>Post</td>
             <td>
                 <p>search: <span>type= string</span></p>
