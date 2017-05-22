@@ -9,21 +9,6 @@
 
 <h2>Api</h2>
 
-<h4>Auth</h4>
-
-<p>hash_hmac(sha256,Parameters,Key)</p>
-<p>Parameters:
-    <span>Parameters that you send to the request (seacrh,quantity)</span>
-</p>
-<p>Key: 
-    <span>you set the key on the .env file the name of the attribute is EVP_PASS_KEY</span>
-</p>
-<p>Example:
-hash_hmac(sha256,'search,quantity',er4ew5r454)
-</p>
-<p>hash_hmac('sha256',$search.$quantity,env('EVP_PASS_KEY'));</p>
-<p>Send the result of the hash_hmac on the header request with the name authtoken</p>
-
 <table>
     <thead>
         <tr>
