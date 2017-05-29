@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Util\Proxy\DeezerProxy;
 use Illuminate\Http\Request;
 use App\Util\Proxy\GoogleProxy;
 use Symfony\Component\HttpFoundation\Response as HTTP_CODE;
@@ -9,19 +10,22 @@ use Symfony\Component\HttpFoundation\Response as HTTP_CODE;
 class TestController extends Controller
 {
     private $googleProxy;
+    private $deezerProxy;
 
-    public function __construct(GoogleProxy $googleProxy)
+    public function __construct(GoogleProxy $googleProxy, DeezerProxy $deezerProxy)
     {
         $this->googleProxy  =   $googleProxy;
+        $this->deezerProxy  =   $deezerProxy;
     }
 
     public function index(Request $request)
     {
         if($request->session()->has(array('search','videos')))
         {
+            $songs      = $request->session()->get('songs');
             $videos     = $request->session()->get('videos');
             $search     = $request->session()->get('search');
-            $response   = compact('videos','search');
+            $response   = compact('videos','search','songs');
 
             return view('video-search')->with($response);
         }
@@ -45,7 +49,8 @@ class TestController extends Controller
         $part       = 'id,snippet';
         $videos     = $this->googleProxy->search($part,$param);
         $search     = $requestParams['search'];
-        $response   = compact('videos','search');
+        $songs      = $this->deezerProxy->search($requestParams['search']);
+        $response   = compact('videos','search','songs');
 
         return redirect()->route('testIndex')->with($response);
     }

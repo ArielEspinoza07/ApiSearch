@@ -26,28 +26,16 @@
     </div>
 @endsection
 @section('subContent')
-    @if(isset($videos))
-        <div class="row ">
-            @foreach($videos as $video)
-                <div class="card  col s4">
-                    <div class="card-image waves-effect waves-block waves-light">
-                        <img class="activator" src="{{$video->thumbnails['high']['url']}}">
-                        <span class="card-title">{{$video->tittle}}</span>
-                    </div>
-                    <div class="card-content">
-
-                        <span class="card-title activator grey-text text-darken-4">More Details<i class="material-icons right">more_vert</i></span>
-                        <p><a href="{{$video->link}}" target="_blank">Watch the video on youtube</a></p>
-                    </div>
-                    <div class="card-reveal">
-                        <h4 class="card-title grey-text text-darken-4">{{$video->tittle}}<i class="material-icons right">close</i></h4>
-                        <div class="video-container">
-                            <iframe width="853" height="480" src="//www.youtube.com/embed/Q8TXgCzxEnw?rel=0" frameborder="0" allowfullscreen></iframe>
-                            <iframe src="{{$video->iframe}}" frameborder="0"></iframe>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
+    <div class="row ">
+        <div class="col s6">
+            @if(isset($videos))
+                @include('partial.video-partial')
+            @endif
         </div>
-    @endif
+        <div class="col s6">
+            @if(isset($songs))
+                @include('partial.song-partial')
+            @endif
+        </div>
+    </div>
 @endsection

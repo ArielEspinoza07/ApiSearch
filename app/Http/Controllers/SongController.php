@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Util\Proxy\DeezerProxy;
 use Log;
 use Illuminate\Http\Request;
 use App\Util\Proxy\GoogleProxy;
@@ -10,13 +11,50 @@ use Symfony\Component\HttpFoundation\Response as HTTP_CODE;
 class SongController extends Controller
 {
     private $googleProxy;
+    private $deezerProxy;
 
-    public function __construct(GoogleProxy $googleProxy)
+    public function __construct(GoogleProxy $googleProxy, DeezerProxy $deezerProxy)
     {
         $this->googleProxy  =   $googleProxy;
+        $this->deezerProxy  =   $deezerProxy;
     }
 
     public function search(Request $request)
+    {
+        $requestParams    =   $request->except('_token');
+        if(is_array($requestParams) && !array_key_exists('search',$requestParams) )
+        {
+            $response   =   array(
+                'status'    =>  (string)'error',
+                'code'      =>  (int)HTTP_CODE::HTTP_BAD_REQUEST,
+                'message'   =>  (string)'Some parameters missing'
+            );
+
+            return $this->response($response,HTTP_CODE::HTTP_BAD_REQUEST);
+        }
+        if(is_null($requestParams['search']) )
+        {
+            $response   =   array(
+                'status'    =>  (string)'error',
+                'code'      =>  (int)HTTP_CODE::HTTP_BAD_REQUEST,
+                'message'   =>  (string)'empty parameters'
+            );
+
+            return $this->response($response,HTTP_CODE::HTTP_BAD_REQUEST);
+        }
+        $responseGoogle = $this->deezerProxy->search($requestParams['search']);
+
+        $response   =   array(
+            'status'    =>  (string)'ok',
+            'code'      =>  (int)HTTP_CODE::HTTP_OK,
+            'message'   =>  (string)'The search was successfully',
+            'data'      =>  $responseGoogle
+        );
+
+        return $this->response($response,HTTP_CODE::HTTP_OK);
+    }
+
+    public function video(Request $request)
     {
         $requestParams    =   $request->except('_token');
         if(is_array($requestParams) && !array_key_exists('search',$requestParams) && !array_key_exists('quantity',$requestParams))

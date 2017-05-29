@@ -19,7 +19,7 @@
     </thead>
     <tbody>
         <tr>
-            <td>api/v1/song/search</td>
+            <td>api/v1/generate/token</td>
             <td>Post</td>
             <td>
                 <p>search: <span>type= string</span></p>
@@ -27,7 +27,14 @@
             </td>
         </tr>
         <tr>
-            <td>api/v1/generate/token</td>
+            <td>api/v1/song/search</td>
+            <td>Post</td>
+            <td>
+                <p>search: <span>type= string</span></p>
+            </td>
+        </tr>
+        <tr>
+            <td>api/v1/video/search</td>
             <td>Post</td>
             <td>
                 <p>search: <span>type= string</span></p>
