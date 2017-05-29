@@ -1,6 +1,6 @@
 @extends('layouts.layout')
 @section('content')
-    <div class="row cyan lighten-5">
+    <div class="card row cyan lighten-5">
         <form class="col s8 offset-s2" method="post" action="/search">
             {{csrf_field()}}
             <div class="row">
