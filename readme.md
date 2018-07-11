@@ -14,7 +14,7 @@
         <tr>
             <th>Route</th>
             <th>Method</th>
-            <th colspam="2">Parameters</th>
+            <th colspan="2">Parameters</th>
         </tr>
     </thead>
     <tbody>
