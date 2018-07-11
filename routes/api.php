@@ -13,6 +13,17 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::middleware('auth:api')
+     ->get('/user', function (Request $request) {
+         return $request->user();
+     });
+
+Route::group(['prefix' => 'v1'], function () {
+    Route::group(['middleware' => ['auth.basic', 'cors']], function () {
+        Route::group(['prefix' => 'search'], function () {
+            Route::post('/',        ['as' => 'search',          'uses' => 'SongController@search']);
+            Route::post('/song',    ['as' => 'song.search',     'uses' => 'SongController@song']);
+            Route::post('/video',   ['as' => 'video.search',    'uses' => 'SongController@video']);
+        });
+    });
 });

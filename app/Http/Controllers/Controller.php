@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Response;
+use App\Util\ResponseUtil;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -10,34 +10,20 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    protected function response($data,$status)
+    use AuthorizesRequests;
+    use DispatchesJobs;
+    use ValidatesRequests;
+
+
+    protected function sendResponse($result, $message, $code)
     {
-        $this->utf8_encode_deep($data);
-        return Response::json($data,$status);
+        return response()->json(ResponseUtil::makeResponse($message, $result), $code);
     }
 
-    protected function utf8_encode_deep(&$input)
+
+    protected function sendError($result, $message, $code)
     {
-        if (is_string($input)) {
-            $input = utf8_encode($input);
-        } else {
-            if (is_array($input)) {
-                foreach ($input as &$value) {
-                    self::utf8_encode_deep($value);
-                }
-
-                unset($value);
-            } else {
-                if (is_object($input)) {
-                    $vars = array_keys(get_object_vars($input));
-
-                    foreach ($vars as $var) {
-                        self::utf8_encode_deep($input->$var);
-                    }
-                }
-            }
-        }
+        return response()->json(ResponseUtil::makeError($message, $result), $code);
     }
 }

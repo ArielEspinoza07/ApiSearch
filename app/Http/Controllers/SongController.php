@@ -10,86 +10,76 @@ use Symfony\Component\HttpFoundation\Response as HTTP_CODE;
 
 class SongController extends Controller
 {
+
     private $googleProxy;
     private $deezerProxy;
 
-    public function __construct(GoogleProxy $googleProxy, DeezerProxy $deezerProxy)
+
+    public function __construct()
     {
-        $this->googleProxy  =   $googleProxy;
-        $this->deezerProxy  =   $deezerProxy;
+        $this->googleProxy = new GoogleProxy();
+        $this->deezerProxy = new DeezerProxy();
     }
 
-    public function search(Request $request)
+
+    public function song(Request $request)
     {
-        $requestParams    =   $request->except('_token');
-        if(is_array($requestParams) && !array_key_exists('search',$requestParams) )
-        {
-            $response   =   array(
-                'status'    =>  (string)'error',
-                'code'      =>  (int)HTTP_CODE::HTTP_BAD_REQUEST,
-                'message'   =>  (string)'Some parameters missing'
-            );
-
-            return $this->response($response,HTTP_CODE::HTTP_BAD_REQUEST);
+        $requestParams = collect($request->except('_token'));
+        if ( ! $requestParams->has('search')) {
+            return $this->sendError([], 'Some parameters missing', HTTP_CODE::HTTP_BAD_REQUEST);
         }
-        if(is_null($requestParams['search']) )
-        {
-            $response   =   array(
-                'status'    =>  (string)'error',
-                'code'      =>  (int)HTTP_CODE::HTTP_BAD_REQUEST,
-                'message'   =>  (string)'empty parameters'
-            );
+        if ($requestParams->get('search')) {
+            $deezer = $this->deezerProxy->search($requestParams->get('search'));
 
-            return $this->response($response,HTTP_CODE::HTTP_BAD_REQUEST);
+            return $this->sendResponse($deezer, 'The search was successfully', HTTP_CODE::HTTP_OK);
         }
-        $responseGoogle = $this->deezerProxy->search($requestParams['search']);
 
-        $response   =   array(
-            'status'    =>  (string)'ok',
-            'code'      =>  (int)HTTP_CODE::HTTP_OK,
-            'message'   =>  (string)'The search was successfully',
-            'data'      =>  $responseGoogle
-        );
+        return $this->sendError([], 'empty parameters', HTTP_CODE::HTTP_BAD_REQUEST);
 
-        return $this->response($response,HTTP_CODE::HTTP_OK);
     }
+
 
     public function video(Request $request)
     {
-        $requestParams    =   $request->except('_token');
-        if(is_array($requestParams) && !array_key_exists('search',$requestParams) && !array_key_exists('quantity',$requestParams))
-        {
-            $response   =   array(
-                'status'    =>  (string)'error',
-                'code'      =>  (int)HTTP_CODE::HTTP_BAD_REQUEST,
-                'message'   =>  (string)'Some parameters missing'
-            );
-
-            return $this->response($response,HTTP_CODE::HTTP_BAD_REQUEST);
+        $requestParams = collect($request->except('_token'));
+        if ( ! $requestParams->has('search')) {
+            return $this->sendError([], 'Some parameters missing', HTTP_CODE::HTTP_BAD_REQUEST);
         }
-        if(is_null($requestParams['search']) || is_null($requestParams['quantity']) )
-        {
-            $response   =   array(
-                'status'    =>  (string)'error',
-                'code'      =>  (int)HTTP_CODE::HTTP_BAD_REQUEST,
-                'message'   =>  (string)'empty parameters'
-            );
+        if ($requestParams->get('search')) {
+            $param  = [
+                'q'          => $requestParams->get('search'),
+                'maxResults' => $requestParams->get('quantity', 15)
+            ];
+            $google = $this->googleProxy->search('id,snippet', $param);
 
-            return $this->response($response,HTTP_CODE::HTTP_BAD_REQUEST);
+            return $this->sendResponse($google, 'The search was successfully', HTTP_CODE::HTTP_OK);
         }
-        $param  = array(
-            'q'             =>  $requestParams['search'],
-            'maxResults'    =>  $requestParams['quantity']);
-        $search = 'id,snippet';
-        $responseGoogle = $this->googleProxy->search($search,$param);
 
-        $response   =   array(
-            'status'    =>  (string)'ok',
-            'code'      =>  (int)HTTP_CODE::HTTP_OK,
-            'message'   =>  (string)'The search was successfully',
-            'data'      =>  $responseGoogle
-        );
+        return $this->sendError([], 'empty parameters', HTTP_CODE::HTTP_BAD_REQUEST);
+    }
 
-        return $this->response($response,HTTP_CODE::HTTP_OK);
+
+    public function search(Request $request)
+    {
+        $requestParams = collect($request->except('_token'));
+        if ( ! $requestParams->has('search')) {
+            return $this->sendError([], 'Some parameters missing', HTTP_CODE::HTTP_BAD_REQUEST);
+        }
+        if ($requestParams->get('search')) {
+            $deezer = $this->deezerProxy->search($requestParams->get('search'));
+            $param  = [
+                'q'          => $requestParams->get('search'),
+                'maxResults' => $requestParams->get('quantity', 15)
+            ];
+            $google = $this->googleProxy->search('id,snippet', $param);
+            $data   = [
+                'song'  => $deezer,
+                'video' => $google
+            ];
+
+            return $this->sendResponse($data, 'The search was successfully', HTTP_CODE::HTTP_OK);
+        }
+
+        return $this->sendError([], 'empty parameters', HTTP_CODE::HTTP_BAD_REQUEST);
     }
 }

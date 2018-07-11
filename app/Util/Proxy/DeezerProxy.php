@@ -8,41 +8,39 @@
 
 namespace App\Util\Proxy;
 
-
 use App\Util\GuzzleHelper;
 
 class DeezerProxy
 {
-    /**
-     * @var GuzzleHelper
-     */
+
     private $guzzleHelper;
 
-    /**
-     * DeezerProxy constructor.
-     * @param GuzzleHelper $guzzleHelper
-     */
-    public function __construct(GuzzleHelper $guzzleHelper)
+
+    public function __construct()
     {
-        $this->guzzleHelper =   $guzzleHelper;
+        $this->guzzleHelper = new GuzzleHelper();
     }
 
 
+    /**
+     * @param $searchParameter
+     *
+     * @return array
+     */
     public function search($searchParameter)
     {
-        $options    =   array(
-            'query' => array(
+        $options = [
+            'query' => [
                 'q' => $searchParameter
-            )
-        );
+            ]
+        ];
 
-        $response   =   $this->guzzleHelper->request(env('DEEZER_API_URL'),'search','GET',$options);
-
-        if(is_array($response) && array_key_exists('status',$response) && $response['status'] == 'ok')
-        {
-            return $response['result']->data;
+        $response = $this->guzzleHelper->request(env('DEEZER_API_URL'), 'search', 'GET', $options);
+        $response = collect($response);
+        if ($response->get('status')  == 'ok') {
+            return $response->get('result')->data;
         }
 
-        return array();
+        return [];
     }
 }
