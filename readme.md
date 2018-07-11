@@ -31,7 +31,7 @@
         <tr>
             <td>api/v1/search/song</td>
             <td>Post</td>
-            <td>
+            <td colspan="2">
                 <p>search: <span>type= string</span></p>
             </td>
         </tr>
