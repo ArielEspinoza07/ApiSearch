@@ -19,6 +19,7 @@ class DeezerProxy
     public function __construct()
     {
         $this->guzzleHelper = new GuzzleHelper();
+        $this->guzzleHelper->setBaseUrl(env('DEEZER_API_URL'));
     }
 
 
@@ -35,10 +36,9 @@ class DeezerProxy
             ]
         ];
 
-        $response = $this->guzzleHelper->request(env('DEEZER_API_URL'), 'search', 'GET', $options);
-        $response = collect($response);
-        if ($response->get('status')  == 'ok') {
-            return $response->get('result')->data;
+        $response = collect($this->guzzleHelper->execRequest(  'search','GET', $options));
+        if ($response->get('success')  == true) {
+            return $response->get('data')->data;
         }
 
         return [];
